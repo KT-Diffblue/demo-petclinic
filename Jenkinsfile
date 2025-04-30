@@ -15,7 +15,7 @@ pipeline {
                 steps {
                     sh '''
                     echo "Get and unzip dcover jars into directory dcover, store dcover script location for later use"
-                    mkdir --parents dcover
+                    mkdir -p dcover
                     curl -L "$DIFFBLUE_RELEASE_URL" --output dcover/dcover.zip --silent
                     unzip -o dcover/dcover.zip -d dcover
                     DIFFBLUE_COVER_LOCATION="dcover/dcover"
