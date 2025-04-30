@@ -62,4 +62,16 @@ pipeline {
 
         stage('Generate Tests with Diffblue') {
             steps {
-                echo "Generating tests with Diffblue CLI"
+                echo "Generating tests with Diffblue CLI..."
+                sh './${DCOVER_PATH} create'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                echo "Running unit tests..."
+                sh 'mvn test'
+            }
+        }
+    }
+}
