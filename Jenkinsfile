@@ -18,73 +18,31 @@ pipeline {
             }
         }
 
-        stage('Install Diffblue CLI') {
-            steps {
-                script {
-                    echo "Downloading and extracting Diffblue CLI..."
-                    sh '''
-                        # Create the dcover directory if it doesn't exist
-                        mkdir -p dcover
-
-                        # Download and extract the Diffblue CLI tarball
-                        curl -L "$DIFFBLUE_RELEASE_URL" --output dcover/dcover.tar.gz --silent
-
-                        # Extract the tar.gz file
-                        tar -xzf dcover/dcover.tar.gz -C dcover
-
-                        # Set the dcover location for later use
-                        export DIFFBLUE_COVER_LOCATION="dcover/dcover"
-
-                        # Make the dcover CLI executable
-                        chmod +x $DIFFBLUE_COVER_LOCATION
-                    '''
+        stages {
+                stage('Use dcover cli in Jenkins') {
+                    steps {
+                        sh '''
+                        echo "Get and unzip dcover jars into directory dcover, store dcover script location for later use"
+                        mkdir --parents dcover
+                        wget "$DIFFBLUE_RELEASE_URL" --output-document dcover/dcover.zip --quiet
+                        unzip -o dcover/dcover.zip -d dcover
+                        DIFFBLUE_COVER_LOCATION="dcover/dcover"
+                        '''
+                    }
                 }
             }
-        }
+            stages {
+                stage('Use dcover cli in Jenkins') {
+                    steps {
+                        sh '''
+                            ...
 
-        stage('License Diffblue CLI') {
-            steps {
-                withCredentials([file(credentialsId: '94ae7f1c-d4f1-436f-af6e-e7d737b55114', variable: 'DIFFBLUE_LICENSE_KEY')]) {
-                    echo "Applying Diffblue CLI license..."
-                    sh '''
-                        cp $LICENSE_FILE .dcover.license
-                    '''
+                            echo "Running dcover to create and commit tests"
+                            "$DIFFBLUE_COVER_LOCATION" ci activate build validate create
+
+                        '''
+                    }
                 }
             }
-        }
-
-        stage('Load Diffblue Environment Variables') {
-            steps {
-                // Load the environment variables from the secret file
-                withCredentials([file(credentialsId: 'diffblue_env_vars.sh', variable: 'ENV_VARS_FILE')]) {
-                    echo "Sourcing Diffblue environment variables..."
-                    sh '''
-                        # Source the environment variables from the secret file
-                        source $ENV_VARS_FILE
-                    '''
-                }
-            }
-        }
-
-        stage('Build') {
-            steps {
-                echo "Building the project..."
-                sh 'mvn clean compile'
-            }
-        }
-
-        stage('Generate Tests with Diffblue') {
-            steps {
-                echo "Generating tests with Diffblue CLI..."
-                sh './${DCOVER_PATH} create'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                echo "Running unit tests..."
-                sh 'mvn test'
-            }
-        }
     }
 }
