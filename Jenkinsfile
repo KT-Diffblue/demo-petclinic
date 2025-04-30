@@ -19,6 +19,15 @@ pipeline {
 
             stage('Use dcover cli in Jenkins') {
                 steps {
+                withCredentials([usernamePassword(credentialsId: 'github', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                    sh '''
+                        git config user.name "$GIT_USERNAME"
+                        git config user.email "<your-email@example.com>"
+                        git remote set-url origin https://$GIT_USERNAME:$GIT_PASSWORD@github.com/KT-Diffblue/demo-spring-petclinic.git
+                        dcover/dcover ci activate build validate create
+                    '''
+                }
+
                     sh '''
                     echo "Get and unzip dcover jars into directory dcover, store dcover script location for later use"
                     mkdir -p dcover
