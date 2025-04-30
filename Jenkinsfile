@@ -1,16 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven 3'
-        jdk 'Java17'
-    }
-
-    environment {
-        DCOVER_PATH = 'dcover'  // Use this to call dcover consistently
-        DIFFBLUE_RELEASE_URL = 'https://release.diffblue.com/cli/latest' // URL for Diffblue CLI
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -18,58 +8,30 @@ pipeline {
             }
         }
 
-        stage('Install Diffblue CLI') {
+        stage('Set up Diffblue License') {
             steps {
-                script {
-                    echo "Downloading and extracting Diffblue CLI..."
-                    sh '''
-                        # Create the dcover directory if it doesn't exist
-                        mkdir -p dcover
-
-                        # Download and extract the Diffblue CLI tarball
-                        curl -L "$DIFFBLUE_RELEASE_URL" --output dcover/dcover.tar.gz --silent
-
-                        # Extract the tar.gz file
-                        tar -xzf dcover/dcover.tar.gz -C dcover
-
-                        # Set the dcover location for later use
-                        export DIFFBLUE_COVER_LOCATION="dcover/dcover"
-
-                        # Make the dcover CLI executable
-                        chmod +x $DIFFBLUE_COVER_LOCATION
-                    '''
-                }
-            }
-        }
-
-        stage('License Diffblue CLI') {
-            steps {
-                withCredentials([file(credentialsId: 'diffblue-license', variable: 'LICENSE_FILE')]) {
-                    echo "Applying Diffblue CLI license..."
-                    sh '''
-                        cp $LICENSE_FILE .dcover.license
-                    '''
+                withCredentials([file(credentialsId: 'diffblue-env-vars', variable: 'ENV_VARS_FILE')]) {
+                    sh 'source $ENV_VARS_FILE'
+                    echo "Diffblue Release URL: ${DIFFBLUE_RELEASE_URL}"
+                    echo "Diffblue License Key: ${DIFFBLUE_LICENSE_KEY}"
                 }
             }
         }
 
         stage('Build') {
             steps {
-                echo "Building the project..."
-                sh 'mvn clean compile'
+                sh 'mvn clean install'
             }
         }
 
-        stage('Generate Tests with Diffblue') {
+        stage('Generate Tests') {
             steps {
-                echo "Generating tests with Diffblue CLI..."
-                sh './${DCOVER_PATH} create'
+                sh './dcover create'
             }
         }
 
         stage('Run Tests') {
             steps {
-                echo "Running unit tests..."
                 sh 'mvn test'
             }
         }
