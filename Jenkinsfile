@@ -22,7 +22,7 @@ pipeline {
 
         stage('Use dcover cli in Jenkins') {
             steps {
-                sshagent(['github-ssh-key']) {
+                sshagent(['github-ssh']) {
                     sh '''
                         echo "Get and unzip dcover jars into directory dcover, store dcover script location for later use"
                         mkdir -p dcover
