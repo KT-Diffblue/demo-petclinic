@@ -23,7 +23,7 @@ pipeline {
                 sh '''
                     echo "Get and unzip dcover jars into directory dcover, store dcover script location for later use"
                     mkdir -p dcover
-                    wget "$DIFFBLUE_RELEASE_URL" --output-document dcover/dcover.zip --quiet
+                    curl "$DIFFBLUE_RELEASE_URL" --output-document dcover/dcover.zip --quiet
                     unzip -o dcover/dcover.zip -d dcover
                     DIFFBLUE_COVER_LOCATION="dcover/dcover"
                 '''
