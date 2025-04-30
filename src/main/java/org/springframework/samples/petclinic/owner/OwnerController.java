@@ -102,7 +102,6 @@ class OwnerController {
 			result.rejectValue("", "typeMismatch.page", "must be positive non-zero");
 			return "owners/findOwners";
 		}
-
 		// find owners by last name
 		Page<Owner> ownersResults = findPaginatedForOwnersLastName(page, owner.getLastName());
 		if (ownersResults.isEmpty()) {
