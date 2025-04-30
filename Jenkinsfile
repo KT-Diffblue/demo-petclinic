@@ -10,7 +10,7 @@ pipeline {
 
         stage('Set up Diffblue License') {
             steps {
-                withCredentials([file(credentialsId: 'diffblue-env-vars', variable: 'ENV_VARS_FILE')]) {
+                withCredentials([file(credentialsId: 'diffblue-env-vars.sh', variable: 'ENV_VARS_FILE')]) {
                     sh 'source $ENV_VARS_FILE'
                     echo "Diffblue Release URL: ${DIFFBLUE_RELEASE_URL}"
                     echo "Diffblue License Key: ${DIFFBLUE_LICENSE_KEY}"
