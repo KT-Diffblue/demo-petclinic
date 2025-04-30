@@ -1,25 +1,36 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven 3'
+        jdk 'Java17'
+    }
+
+    environment {
+        DIFFBLUE_RELEASE_URL = 'https://release.diffblue.com/cli/latest'
+        DIFFBLUE_LICENSE_KEY = credentials('diffblue-cover-license-key')
+    }
+
     stages {
-        stage('Checkout SCM') {
+        stage('Checkout') {
             steps {
                 sshagent(['github-ssh']) {
-                    sh '''
-                        git clone git@github.com:KT-Diffblue/demo-spring-petclinic.git
-                        cd demo-spring-petclinic
-                        git checkout jenkins-pipeline
-                    '''
+                    git branch: 'jenkins-pipeline', url: 'git@github.com:KT-Diffblue/demo-spring-petclinic.git'
                 }
             }
         }
 
         stage('Use dcover cli in Jenkins') {
             steps {
-                sshagent(['github-ssh']) {
+                sshagent(['github-ssh-key']) {
                     sh '''
-                        echo 'Running dcover to create and commit tests'
-                        dcover/dcover ci activate build validate create
+                        echo "Get and unzip dcover jars into directory dcover, store dcover script location for later use"
+                        mkdir -p dcover
+                        curl -L "$DIFFBLUE_RELEASE_URL" --output dcover/dcover.zip --silent
+                        unzip -o dcover/dcover.zip -d dcover
+                        DIFFBLUE_COVER_LOCATION="dcover/dcover"
+                        echo "Running dcover to create and commit tests"
+                        "$DIFFBLUE_COVER_LOCATION" ci activate build validate create
                     '''
                 }
             }
