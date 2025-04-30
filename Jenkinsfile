@@ -35,14 +35,5 @@ pipeline {
                 }
             }
         }
-        stage('Generate dcover cover reports in Jenkins') {
-                steps {
-                    sh '''
-                        echo "Running dcover to generate reports"
-                        "$DIFFBLUE_COVER_LOCATION" coverage-reports upload <Reports Server URL>
-
-                    '''
-                }
-            }
     }
 }
