@@ -44,7 +44,7 @@ pipeline {
 
         stage('License Diffblue CLI') {
             steps {
-                withCredentials([file(credentialsId: 'diffblue-cover-license-key', variable: 'LICENSE_FILE')]) {
+                withCredentials([file(credentialsId: 'diffblue_env_vars.sh', variable: 'LICENSE_FILE')]) {
                     echo "Applying Diffblue CLI license..."
                     sh '''
                         cp $LICENSE_FILE .dcover.license
