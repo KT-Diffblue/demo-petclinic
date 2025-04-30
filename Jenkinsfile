@@ -11,6 +11,12 @@ pipeline {
         DIFFBLUE_LICENSE_KEY = credentials('diffblue-cover-license-key')
     }
     stages {
+            stage('Checkout') {
+                        steps {
+                            git branch: 'jenkins-pipeline', url: 'https://github.com/KT-Diffblue/demo-spring-petclinic'
+                        }
+                    }
+
             stage('Use dcover cli in Jenkins') {
                 steps {
                     sh '''
