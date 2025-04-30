@@ -177,9 +177,12 @@ class VetDiffblueTest {
     vet.addSpecialty(specialty2);
 
     // Assert
-    assertEquals(2, vet.getSpecialties().size());
+    List<Specialty> specialties = vet.getSpecialties();
+    assertEquals(2, specialties.size());
     assertEquals(2, vet.getSpecialtiesInternal().size());
     assertEquals(2, vet.getNrOfSpecialties());
+    assertSame(specialty, specialties.get(0));
+    assertSame(specialty2, specialties.get(1));
   }
 
   /**
