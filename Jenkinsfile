@@ -12,6 +12,12 @@ pipeline {
     }
 
     stages {
+        stage('Verify wget') {
+            steps {
+                sh 'which wget'
+            }
+        }
+
         stage('Checkout') {
             steps {
                 git branch: 'jenkins-pipeline', url: 'https://github.com/KT-Diffblue/demo-spring-petclinic'
