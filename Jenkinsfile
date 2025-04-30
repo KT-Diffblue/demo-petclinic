@@ -7,7 +7,8 @@ pipeline {
     }
 
     environment {
-        DCOVER_PATH = 'dcover'  // use this to call dcover consistently
+        DCOVER_PATH = 'dcover'  // Use this to call dcover consistently
+        DIFFBLUE_RELEASE_URL = 'https://download.diffblue.com/cover/dce-latest.tar.gz' // URL for Diffblue CLI
     }
 
     stages {
@@ -19,19 +20,32 @@ pipeline {
 
         stage('Install Diffblue CLI') {
             steps {
-                sh '''
-                    # Download and extract Diffblue CLI
-                    wget https://download.diffblue.com/cover/dce-latest.tar.gz
-                    tar -xzf dce-latest.tar.gz
-                    mv dce-*/dcover dcover
-                    chmod +x dcover
-                '''
+                script {
+                    echo "Downloading and extracting Diffblue CLI..."
+                    sh '''
+                        # Create the dcover directory if it doesn't exist
+                        mkdir -p dcover
+
+                        # Download and extract the Diffblue CLI tarball
+                        curl -L "$DIFFBLUE_RELEASE_URL" --output dcover/dcover.tar.gz --silent
+
+                        # Extract the tar.gz file
+                        tar -xzf dcover/dcover.tar.gz -C dcover
+
+                        # Set the dcover location for later use
+                        export DIFFBLUE_COVER_LOCATION="dcover/dcover"
+
+                        # Make the dcover CLI executable
+                        chmod +x $DIFFBLUE_COVER_LOCATION
+                    '''
+                }
             }
         }
 
         stage('License Diffblue CLI') {
             steps {
                 withCredentials([file(credentialsId: 'diffblue-license', variable: 'LICENSE_FILE')]) {
+                    echo "Applying Diffblue CLI license..."
                     sh '''
                         cp $LICENSE_FILE .dcover.license
                     '''
@@ -41,20 +55,11 @@ pipeline {
 
         stage('Build') {
             steps {
+                echo "Building the project..."
                 sh 'mvn clean compile'
             }
         }
 
         stage('Generate Tests with Diffblue') {
             steps {
-                sh './${DCOVER_PATH} create'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh 'mvn test'
-            }
-        }
-    }
-}
+                echo "Generating tests with Diffblue CLI
