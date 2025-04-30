@@ -14,8 +14,14 @@ pipeline {
             stage('Use dcover cli in Jenkins') {
                 steps {
                     sh '''
-                        echo "Running dcover to create and commit tests"
-                       "$DIFFBLUE_COVER_LOCATION" ci activate build validate create
+                    echo "Get and unzip dcover jars into directory dcover, store dcover script location for later use"
+                    mkdir -p dcover
+                    curl -L "$DIFFBLUE_RELEASE_URL" --output dcover/dcover.zip --silent
+                    unzip -o dcover/dcover.zip -d dcover
+                    DIFFBLUE_COVER_LOCATION="dcover/dcover"
+                    echo "Running dcover to create and commit tests"
+                    "$DIFFBLUE_COVER_LOCATION" ci activate build validate create
+
                     '''
                 }
             }
