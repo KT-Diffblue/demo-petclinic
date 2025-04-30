@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         DCOVER_PATH = 'dcover'  // Use this to call dcover consistently
-        DIFFBLUE_RELEASE_URL = 'https://download.diffblue.com/cover/dce-latest.tar.gz' // URL for Diffblue CLI
+        DIFFBLUE_RELEASE_URL = 'https://release.diffblue.com/cli/latest' // URL for Diffblue CLI
     }
 
     stages {
