@@ -35,5 +35,15 @@ pipeline {
                 }
             }
         }
+        stage('Generate dcover cover reports in Jenkins') {
+                steps {
+                    sh '''
+
+                        echo "Running dcover to generate reports"
+                        dcover coverage-reports upload http://localhost:9090
+
+                    '''
+                }
+            }
     }
 }
