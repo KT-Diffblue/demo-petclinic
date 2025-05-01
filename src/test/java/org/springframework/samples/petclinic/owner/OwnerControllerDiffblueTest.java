@@ -222,17 +222,16 @@ class OwnerControllerDiffblueTest {
    * Test {@link OwnerController#processFindForm(int, Owner, BindingResult, Model)}.
    * <ul>
    *   <li>Given {@link Owner} (default constructor) Address is {@code 17 High St}.</li>
-   *   <li>When valueOf one.</li>
    *   <li>Then model size five.</li>
    * </ul>
    * <p>
    * Method under test: {@link OwnerController#processFindForm(int, Owner, BindingResult, Model)}
    */
   @Test
-  @DisplayName("Test processFindForm(int, Owner, BindingResult, Model); given Owner (default constructor) Address is '17 High St'; when valueOf one; then model size five")
+  @DisplayName("Test processFindForm(int, Owner, BindingResult, Model); given Owner (default constructor) Address is '17 High St'; then model size five")
   @Tag("MaintainedByDiffblue")
   @MethodsUnderTest({"String OwnerController.processFindForm(int, Owner, BindingResult, Model)"})
-  void testProcessFindForm_givenOwnerAddressIs17HighSt_whenValueOfOne_thenModelSizeFive() throws Exception {
+  void testProcessFindForm_givenOwnerAddressIs17HighSt_thenModelSizeFive() throws Exception {
     // Arrange
     Owner owner = new Owner();
     owner.setAddress("42 Main St");
@@ -274,17 +273,16 @@ class OwnerControllerDiffblueTest {
    * Test {@link OwnerController#processFindForm(int, Owner, BindingResult, Model)}.
    * <ul>
    *   <li>Given {@link Owner} (default constructor) Address is {@code 42 Main St}.</li>
-   *   <li>When valueOf one.</li>
    *   <li>Then status {@link StatusResultMatchers#isFound()}.</li>
    * </ul>
    * <p>
    * Method under test: {@link OwnerController#processFindForm(int, Owner, BindingResult, Model)}
    */
   @Test
-  @DisplayName("Test processFindForm(int, Owner, BindingResult, Model); given Owner (default constructor) Address is '42 Main St'; when valueOf one; then status isFound()")
+  @DisplayName("Test processFindForm(int, Owner, BindingResult, Model); given Owner (default constructor) Address is '42 Main St'; then status isFound()")
   @Tag("MaintainedByDiffblue")
   @MethodsUnderTest({"String OwnerController.processFindForm(int, Owner, BindingResult, Model)"})
-  void testProcessFindForm_givenOwnerAddressIs42MainSt_whenValueOfOne_thenStatusIsFound() throws Exception {
+  void testProcessFindForm_givenOwnerAddressIs42MainSt_thenStatusIsFound() throws Exception {
     // Arrange
     Owner owner = new Owner();
     owner.setAddress("42 Main St");
@@ -345,48 +343,17 @@ class OwnerControllerDiffblueTest {
   /**
    * Test {@link OwnerController#processFindForm(int, Owner, BindingResult, Model)}.
    * <ul>
-   *   <li>When valueOf minus one.</li>
+   *   <li>When {@link MockHttpServletRequestBuilder#param(String, String[])} {@code page} is valueOf one.</li>
    *   <li>Then model size one.</li>
    * </ul>
    * <p>
    * Method under test: {@link OwnerController#processFindForm(int, Owner, BindingResult, Model)}
    */
   @Test
-  @DisplayName("Test processFindForm(int, Owner, BindingResult, Model); when valueOf minus one; then model size one")
+  @DisplayName("Test processFindForm(int, Owner, BindingResult, Model); when param(String, String[]) 'page' is valueOf one; then model size one")
   @Tag("MaintainedByDiffblue")
   @MethodsUnderTest({"String OwnerController.processFindForm(int, Owner, BindingResult, Model)"})
-  void testProcessFindForm_whenValueOfMinusOne_thenModelSizeOne() throws Exception {
-    // Arrange
-    when(ownerRepository.findByLastNameStartingWith(Mockito.<String>any(), Mockito.<Pageable>any()))
-        .thenReturn(new PageImpl<>(new ArrayList<>()));
-    MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/owners");
-    MockHttpServletRequestBuilder requestBuilder = getResult.param("page", String.valueOf(-1));
-
-    // Act and Assert
-    MockMvcBuilders.standaloneSetup(ownerController)
-        .build()
-        .perform(requestBuilder)
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.model().size(1))
-        .andExpect(MockMvcResultMatchers.model().attributeExists("owner"))
-        .andExpect(MockMvcResultMatchers.view().name("owners/findOwners"))
-        .andExpect(MockMvcResultMatchers.forwardedUrl("owners/findOwners"));
-  }
-
-  /**
-   * Test {@link OwnerController#processFindForm(int, Owner, BindingResult, Model)}.
-   * <ul>
-   *   <li>When valueOf one.</li>
-   *   <li>Then model size one.</li>
-   * </ul>
-   * <p>
-   * Method under test: {@link OwnerController#processFindForm(int, Owner, BindingResult, Model)}
-   */
-  @Test
-  @DisplayName("Test processFindForm(int, Owner, BindingResult, Model); when valueOf one; then model size one")
-  @Tag("MaintainedByDiffblue")
-  @MethodsUnderTest({"String OwnerController.processFindForm(int, Owner, BindingResult, Model)"})
-  void testProcessFindForm_whenValueOfOne_thenModelSizeOne() throws Exception {
+  void testProcessFindForm_whenParamPageIsValueOfOne_thenModelSizeOne() throws Exception {
     // Arrange
     when(ownerRepository.findByLastNameStartingWith(Mockito.<String>any(), Mockito.<Pageable>any()))
         .thenReturn(new PageImpl<>(new ArrayList<>()));
