@@ -31,19 +31,11 @@ pipeline {
                         DIFFBLUE_COVER_LOCATION="dcover/dcover"
                         echo "Running dcover to create and commit tests"
                         "$DIFFBLUE_COVER_LOCATION" ci activate build validate create
+                        echo "Running dcover to generate reports"
+                        "$DIFFBLUE_COVER_LOCATION" coverage-reports upload http://localhost:9090
                     '''
                 }
             }
         }
-        stage('Generate dcover cover reports in Jenkins') {
-                steps {
-                    sh '''
-
-                        echo "Running dcover to generate reports"
-                        "$DIFFBLUE_COVER_LOCATION" coverage-reports upload http://localhost:9090
-
-                    '''
-                }
-            }
     }
 }
