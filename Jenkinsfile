@@ -40,7 +40,7 @@ pipeline {
                     sh '''
 
                         echo "Running dcover to generate reports"
-                        dcover coverage-reports upload http://localhost:9090
+                        "$DIFFBLUE_COVER_LOCATION" coverage-reports upload http://localhost:9090
 
                     '''
                 }
