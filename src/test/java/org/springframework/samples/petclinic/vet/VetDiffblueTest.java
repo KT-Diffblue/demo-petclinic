@@ -150,6 +150,41 @@ class VetDiffblueTest {
   /**
    * Test {@link Vet#addSpecialty(Specialty)}.
    * <ul>
+   *   <li>Given {@link Specialty} (default constructor) Id is one.</li>
+   *   <li>Then {@link Vet} (default constructor) Specialties size is two.</li>
+   * </ul>
+   * <p>
+   * Method under test: {@link Vet#addSpecialty(Specialty)}
+   */
+  @Test
+  @DisplayName("Test addSpecialty(Specialty); given Specialty (default constructor) Id is one; then Vet (default constructor) Specialties size is two")
+  @Tag("MaintainedByDiffblue")
+  @MethodsUnderTest({"void Vet.addSpecialty(Specialty)"})
+  void testAddSpecialty_givenSpecialtyIdIsOne_thenVetSpecialtiesSizeIsTwo() {
+    // Arrange
+    Specialty specialty = new Specialty();
+    specialty.setId(1);
+    specialty.setName("Canines");
+
+    Vet vet = new Vet();
+    vet.addSpecialty(specialty);
+
+    Specialty specialty2 = new Specialty();
+    specialty2.setId(1);
+    specialty2.setName("Canines");
+
+    // Act
+    vet.addSpecialty(specialty2);
+
+    // Assert
+    assertEquals(2, vet.getSpecialties().size());
+    assertEquals(2, vet.getSpecialtiesInternal().size());
+    assertEquals(2, vet.getNrOfSpecialties());
+  }
+
+  /**
+   * Test {@link Vet#addSpecialty(Specialty)}.
+   * <ul>
    *   <li>Given {@link Vet} (default constructor).</li>
    *   <li>Then {@link Vet} (default constructor) Specialties size is one.</li>
    * </ul>
